@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,6 +15,7 @@
       justify-content: center;
       height: 100vh;
     }
+
     .card {
       background: white;
       border-radius: 16px;
@@ -22,18 +24,21 @@
       max-width: 400px;
       width: 100%;
     }
+
     h1 {
       text-align: center;
       margin-bottom: 1.5rem;
       font-size: 1.5rem;
       color: #333;
     }
+
     label {
       display: block;
       margin-bottom: 0.3rem;
       font-weight: bold;
       color: #444;
     }
+
     input {
       width: 100%;
       padding: 0.7rem;
@@ -42,6 +47,7 @@
       border-radius: 8px;
       font-size: 1rem;
     }
+
     button {
       width: 100%;
       padding: 0.9rem;
@@ -54,9 +60,11 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
+
     button:hover {
       background: #06614a;
     }
+
     .message {
       margin-top: 1rem;
       text-align: center;
@@ -64,20 +72,30 @@
       border-radius: 6px;
       font-size: 0.9rem;
     }
+
+    .loading {
+      background-color: #7c7c7c63;
+      color: #000000;
+      font-size: larger;
+    }
+
     .success {
       background: #dcfce7;
       color: #166534;
     }
+
     .error {
       background: #fee2e2;
       color: #991b1b;
     }
   </style>
 </head>
+
 <body>
   <div class="card">
     <h1>Register to ParkChat</h1>
     <form id="registerForm">
+      <p>Remember that you can't change your credentials EVER. So choose a strong password</p>
       <label for="nickname">Nickname</label>
       <input type="text" id="nickname" name="nickname" required placeholder="Your nickname" />
 
@@ -95,32 +113,49 @@
       const nickname = document.getElementById("nickname").value;
       const password = document.getElementById("password").value;
       const messageBox = document.getElementById("message");
-      messageBox.style.display = "none";
+      messageBox.style.display = "block";
+      messageBox.className = "message loading";
+      messageBox.textContent = "";
+
+      let count = 0;
+      const max = 7;
+      const loading = ["L", "o", "a", "d", "i", "n", "g"];
+      const interval = setInterval(() => {
+        messageBox.textContent += loading[count]; 
+        count++;
+        if (count == max) {
+          messageBox.textContent = "";
+          count = 0;
+        }
+      }, 500);
+
 
       try {
         const res = await fetch("https://chat.astelta.world/register", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ nickname, password }),
         });
 
+        const data = await res.text();
+
         if (!res.ok) {
-          const err = await res.text();
-          throw new Error(err || "Registration failed");
+          throw new Error(data || "Registration failed");
         }
 
-        const data = await res.text();
         messageBox.textContent = data;
         messageBox.className = "message success";
+
       } catch (err) {
         messageBox.textContent = "❌ Error: " + err.message;
         messageBox.className = "message error";
+
       } finally {
-        messageBox.style.display = "block";
+        clearInterval(interval);
       }
     });
   </script>
+
 </body>
+
 </html>
