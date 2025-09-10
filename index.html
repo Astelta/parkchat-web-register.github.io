@@ -111,7 +111,7 @@
           throw new Error(err || "Błąd podczas rejestracji");
         }
 
-        const data = await res.json();
+        const data = await res;
         messageBox.textContent = data;
         messageBox.className = "message success";
       } catch (err) {
