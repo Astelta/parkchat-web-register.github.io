@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rejestracja - ParkChat</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #21a892, #066113);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+      color: #444;
+    }
+    input {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      background: #8beea4;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #06614a;
+    }
+    .message {
+      margin-top: 1rem;
+      text-align: center;
+      padding: 0.5rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Rejestracja w ParkChat</h1>
+    <form id="registerForm">
+      <label for="nickname">Nickname</label>
+      <input type="text" id="nickname" name="nickname" required placeholder="Twój nick" />
+
+      <label for="password">Hasło</label>
+      <input type="password" id="password" name="password" required placeholder="Twoje hasło" />
+
+      <button type="submit">Zarejestruj się</button>
+    </form>
+    <div id="message" class="message" style="display: none;"></div>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nickname = document.getElementById("nickname").value;
+      const password = document.getElementById("password").value;
+      const messageBox = document.getElementById("message");
+      messageBox.style.display = "none";
+
+      try {
+        const res = await fetch("http://chat.astelta.world/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ nickname, password }),
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          throw new Error(err || "Błąd podczas rejestracji");
+        }
+
+        const data = await res.json();
+        messageBox.textContent = "✅ Rejestracja udana: " + JSON.stringify(data);
+        messageBox.className = "message success";
+      } catch (err) {
+        messageBox.textContent = "❌ Błąd: " + err.message;
+        messageBox.className = "message error";
+      } finally {
+        messageBox.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
