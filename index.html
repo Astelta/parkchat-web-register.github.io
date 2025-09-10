@@ -112,7 +112,7 @@
         }
 
         const data = await res.json();
-        messageBox.textContent = "✅ Rejestracja udana: " + JSON.stringify(data);
+        messageBox.textContent = data;
         messageBox.className = "message success";
       } catch (err) {
         messageBox.textContent = "❌ Błąd: " + err.message;
