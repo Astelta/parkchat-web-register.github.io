@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rejestracja - ParkChat</title>
+  <title>Register - ParkChat</title>
   <style>
     body {
       margin: 0;
@@ -76,15 +76,15 @@
 </head>
 <body>
   <div class="card">
-    <h1>Rejestracja w ParkChat</h1>
+    <h1>Register to ParkChat</h1>
     <form id="registerForm">
       <label for="nickname">Nickname</label>
-      <input type="text" id="nickname" name="nickname" required placeholder="Twój nick" />
+      <input type="text" id="nickname" name="nickname" required placeholder="Your nickname" />
 
-      <label for="password">Hasło</label>
-      <input type="password" id="password" name="password" required placeholder="Twoje hasło" />
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required placeholder="Your password" />
 
-      <button type="submit">Zarejestruj się</button>
+      <button type="submit">Register</button>
     </form>
     <div id="message" class="message" style="display: none;"></div>
   </div>
@@ -108,14 +108,14 @@
 
         if (!res.ok) {
           const err = await res.text();
-          throw new Error(err || "Błąd podczas rejestracji");
+          throw new Error(err || "Registration failed");
         }
 
-        const data = await res;
+        const data = await res.text();
         messageBox.textContent = data;
         messageBox.className = "message success";
       } catch (err) {
-        messageBox.textContent = "❌ Błąd: " + err.message;
+        messageBox.textContent = "❌ Error: " + err.message;
         messageBox.className = "message error";
       } finally {
         messageBox.style.display = "block";
